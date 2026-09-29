@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Family - Lesson</title>
+<style>
+body{font-family:Arial,sans-serif;text-align:center;background:#f9f9f9;padding:20px;margin:0}
+h1{color:#4CAF50}
+h2{color:#FF9800;margin-top:30px}
+.card{background:#e3f2fd;border:2px solid #2196F3;border-radius:10px;padding:15px;margin:5px;display:inline-block;cursor:pointer;font-size:20px;font-weight:bold;min-width:80px}
+.card:hover{background:#bbdefb}
+button{background:#4CAF50;color:#fff;border:none;padding:12px 24px;font-size:18px;border-radius:50px;cursor:pointer;margin:10px;font-family:inherit}
+button:hover{background:#388E3C}
+.btn-option{background:#fff;color:#333;border:2px solid #ccc}
+.btn-option:hover{border-color:#4CAF50;background:#f0f0f0}
+.hidden{display:none}
+.progress{width:80%;height:20px;background:#eee;border-radius:10px;margin:10px auto;overflow:hidden}
+.progress-fill{height:100%;background:#4CAF50;transition:width .4s;width:0}
+.progress-text{font-weight:bold}
+.feedback{font-size:18px;font-weight:bold;min-height:24px;margin-top:10px}
+.correct{color:#2e7d32}
+.incorrect{color:#c62828}
+.number-display{font-size:60px;font-weight:bold;color:#E91E63;margin:20px 0}
+.avatar{font-size:60px;margin:15px 0}
+.sentence{font-size:26px;font-weight:bold;background:#fff3e0;padding:15px;border-radius:15px;border:2px solid #ffb74d;margin:15px auto;max-width:500px}
+.blank{color:#E91E63;border-bottom:3px solid #E91E63;padding:0 10px;display:inline-block;min-width:50px}
+.final-screen{background:#fff9c4;border-radius:20px;padding:30px;border:4px dashed #fbc02d;max-width:500px;margin:20px auto}
+.final-screen h3{font-size:32px;color:#e65100;margin:10px 0}
+.stars{font-size:28px;letter-spacing:3px;margin:15px 0;color:#FF9800}
+.score-display{font-size:22px;letter-spacing:2px;margin:5px 0;min-height:28px}
+</style>
+</head>
+<body>
+<h1>Module 1: My Family</h1>
+
+<h2>1. Listen and Repeat</h2>
+<div id="words"></div>
+
+<h2>2. Numbers 11-20</h2>
+<div id="num-start">
+  <div id="nums"></div>
+  <button onclick="startNum()">Start Game</button>
+</div>
+<div id="num-play" class="hidden">
+  <div class="progress"><div class="progress-fill" id="numFill"></div></div>
+  <p class="progress-text" id="numProg">0 / 10</p>
+  <div class="score-display" id="numStars"></div>
+  <div class="number-display" id="numShow">?</div>
+  <div id="numOpts"></div>
+  <div class="feedback" id="numFb"></div>
+</div>
+<div id="num-final" class="hidden final-screen">
+  <h3>Great job!</h3>
+  <div class="stars" id="numFinalStars"></div>
+  <p id="numFinalText"></p>
+  <button onclick="startNum()">Play Again</button>
+</div>
+
+<h2>3. Who's this? (He / She)</h2>
+<div id="fam-play">
+  <div class="progress"><div class="progress-fill" id="famFill"></div></div>
+  <p class="progress-text" id="famProg">0 / 10</p>
+  <div class="score-display" id="famStars"></div>
+  <div class="avatar" id="famAv">&#128104;</div>
+  <div class="sentence">Who's this?</div>
+  <div id="famOpts"></div>
+  <div class="feedback" id="famFb"></div>
+</div>
+<div id="fam-final" class="hidden final-screen">
+  <h3>Great job!</h3>
+  <div class="stars" id="famFinalStars"></div>
+  <p id="famFinalText"></p>
+  <button onclick="startFam()">Play Again</button>
+</div>
+
+<h2>4. Is it...? Yes or No</h2>
+<div id="obj-play">
+  <div class="progress"><div class="progress-fill" id="objFill"></div></div>
+  <p class="progress-text" id="objProg">0 / 10</p>
+  <div class="score-display" id="objStars"></div>
+  <div class="avatar" id="objAv">&#127800;</div>
+  <div class="sentence" id="objQ">Is it a flower?</div>
+  <div>
+    <button onclick="checkYN(true)">Yes, it is.</button>
+    <button onclick="checkYN(false)">No, it isn't.</button>
+  </div>
+  <div class="feedback" id="objFb"></div>
+</div>
+<div id="obj-final" class="hidden final-screen">
+  <h3>Great job!</h3>
+  <div class="stars" id="objFinalStars"></div>
+  <p id="objFinalText"></p>
+  <button onclick="startObj()">Play Again</button>
+</div>
+
+<h2>5. Happy or Sad?</h2>
+<div id="adj-play">
+  <div class="progress"><div class="progress-fill" id="adjFill"></div></div>
+  <p class="progress-text" id="adjProg">0 / 10</p>
+  <div class="score-display" id="adjStars"></div>
+  <div class="avatar" id="adjEmoji">&#128522;</div>
+  <div class="sentence" id="adjSent">She <span class="blank">___</span> happy.</div>
+  <div id="adjOpts"></div>
+  <div class="feedback" id="adjFb"></div>
+</div>
+<div id="adj-final" class="hidden final-screen">
+  <h3>Great job!</h3>
+  <div class="stars" id="adjFinalStars"></div>
+  <p id="adjFinalText"></p>
+  <button onclick="startAdj()">Play Again</button>
+</div>
+
+<h2>6. Am / Is / Are</h2>
+<div id="tobe-play">
+  <div class="progress"><div class="progress-fill" id="tobeFill"></div></div>
+  <p class="progress-text" id="tobeProg">0 / 10</p>
+  <div class="score-display" id="tobeStars"></div>
+  <div class="sentence" id="tobeSent">I <span class="blank">___</span> happy.</div>
+  <div id="tobeOpts"></div>
+  <div class="feedback" id="tobeFb"></div>
+</div>
+<div id="tobe-final" class="hidden final-screen">
+  <h3>Great job!</h3>
+  <div class="stars" id="tobeFinalStars"></div>
+  <p id="tobeFinalText"></p>
+  <button onclick="startTobe()">Play Again</button>
+</div>
+
+<h2>7. Count 11-20</h2>
+<p style="font-size:24px;letter-spacing:3px;color:#00bcd4;font-weight:bold">
+11 - 12 - 13 - 14 - 15 - 16 - 17 - 18 - 19 - 20
+</p>
+
+<p id="status" style="color:#666;font-size:14px;margin-top:40px">Status: waiting...</p>
+
+<script>
+var statusEl = document.getElementById('status');
+if (!('speechSynthesis' in window)) {
+  statusEl.textContent = 'ERROR: No speech support';
+} else {
+  statusEl.textContent = 'OK: Ready';
+}
+
+var voices = [];
+var englishVoice = null;
+function pickVoice() {
+  voices = window.speechSynthesis.getVoices();
+  englishVoice = null;
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang === 'en-US') { englishVoice = voices[i]; break; }
+  }
+  if (!englishVoice) {
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i].lang.indexOf('en') === 0) { englishVoice = voices[i]; break; }
+    }
+  }
+}
+pickVoice();
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+}
+
+var speaking = false;
+function speak(text, cb) {
+  if (speaking) { if (cb) cb(); return; }
+  speaking = true;
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  if (englishVoice) u.voice = englishVoice;
+  u.onstart = function() { statusEl.textContent = 'Speaking: ' + text; };
+  u.onend = function() { speaking = false; statusEl.textContent = 'Done'; if (cb) cb(); };
+  u.onerror = function() { speaking = false; if (cb) cb(); };
+  window.speechSynthesis.speak(u);
+}
+setTimeout(function() {
+  var w = new SpeechSynthesisUtterance(' ');
+  w.volume = 0;
+  w.lang = 'en-US';
+  if (englishVoice) w.voice = englishVoice;
+  window.speechSynthesis.speak(w);
+}, 500);
+
+var TOTAL = 10;
+function stars(s) {
+  var r = '';
+  for (var i = 0; i < TOTAL; i++) r += (i < s) ? '\u2B50' : '\u2606';
+  return r;
+}
+function praise(s) {
+  if (s >= 9) return 'Excellent!';
+  if (s >= 7) return 'Very good!';
+  if (s >= 5) return 'Well done!';
+  return 'Good try!';
+}
+
+var words = ['Mum','Dad','Brother','Sister','Grandma','Grandpa','Happy','Sad','Flower'];
+var wBox = document.getElementById('words');
+words.forEach(function(w) {
+  var d = document.createElement('div');
+  d.className = 'card';
+  d.textContent = w;
+  d.onclick = function() { speak(w); };
+  wBox.appendChild(d);
+});
+
+var numWords = ['eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+var nums = [11,12,13,14,15,16,17,18,19,20];
+var nBox = document.getElementById('nums');
+nums.forEach(function(n, i) {
+  var d = document.createElement('div');
+  d.className = 'card';
+  d.textContent = n;
+  d.onclick = function() { speak(numWords[i]); };
+  nBox.appendChild(d);
+});
+
+var curNum = null, numQ = 0, numScore = 0, numLocked = false;
+function startNum() {
+  document.getElementById('num-start').classList.add('hidden');
+  document.getElementById('num-final').classList.add('hidden');
+  document.getElementById('num-play').classList.remove('hidden');
+  numQ = 0; numScore = 0; numLocked = false;
+  updNum(); nextNum();
+}
+function updNum() {
+  document.getElementById('numFill').style.width = (numQ/TOTAL*100) + '%';
+  document.getElementById('numProg').textContent = numQ + ' / ' + TOTAL;
+  document.getElementById('numStars').textContent = stars(numScore);
+}
+function nextNum() {
+  if (numQ >= TOTAL) { showNumFinal(); return; }
+  numLocked = false;
+  document.getElementById('numFb').textContent = '';
+  var idx = Math.floor(Math.random() * nums.length);
+  curNum = { n: nums[idx], w: numWords[idx] };
+  document.getElementById('numShow').textContent = curNum.n;
+  var opts = [curNum.w];
+  while (opts.length < 4) {
+    var r = numWords[Math.floor(Math.random() * numWords.length)];
+    if (opts.indexOf(r) === -1) opts.push(r);
+  }
+  opts.sort(function() { return Math.random() - 0.5; });
+  var box = document.getElementById('numOpts');
+  box.innerHTML = '';
+  opts.forEach(function(o) {
+    var b = document.createElement('button');
+    b.className = 'card btn-option';
+    b.textContent = o;
+    b.onclick = function() { checkNum(o); };
+    box.appendChild(b);
+  });
+}
+function checkNum(a) {
+  if (numLocked) return;
+  numLocked = true;
+  var fb = document.getElementById('numFb');
+  if (a === curNum.w) {
+    numScore++;
+    fb.textContent = 'Correct!';
+    fb.className = 'feedback correct';
+    speak('Correct! ' + curNum.w, function() {
+      numQ++; updNum(); setTimeout(nextNum, 500);
+    });
+  } else {
+    fb.textContent = 'Try again!';
+    fb.className = 'feedback incorrect';
+    speak('Try again', function() { numLocked = false; });
+  }
+}
+function showNumFinal() {
+  document.getElementById('num-play').classList.add('hidden');
+  document.getElementById('num-final').classList.remove('hidden');
+  document.getElementById('numFinalStars').textContent = stars(numScore);
+  document.getElementById('numFinalText').textContent = 'You got ' + numScore + ' out of ' + TOTAL;
+  speak(praise(numScore) + ' You got ' + numScore + ' out of ' + TOTAL);
+}
+
+var family = [
+  { role: 'mum', p: 'She', av: '\uD83D\uDC69' },
+  { role: 'dad', p: 'He', av: '\uD83D\uDC68' },
+  { role: 'brother', p: 'He', av: '\uD83D\uDC66' },
+  { role: 'sister', p: 'She', av: '\uD83D\uDC67' },
+  { role: 'grandma', p: 'She', av: '\uD83D\uDC75' },
+  { role: 'grandpa', p: 'He', av: '\uD83D\uDC74' }
+];
+var curFam = null, famQ = 0, famScore = 0, famLocked = false;
+function startFam() {
+  document.getElementById('fam-final').classList.add('hidden');
+  document.getElementById('fam-play').classList.remove('hidden');
+  famQ = 0; famScore = 0; famLocked = false;
+  updFam(); nextFam();
+}
+function updFam() {
+  document.getElementById('famFill').style.width = (famQ/TOTAL*100) + '%';
+  document.getElementById('famProg').textContent = famQ + ' / ' + TOTAL;
+  document.getElementById('famStars').textContent = stars(famScore);
+}
+function nextFam() {
+  if (famQ >= TOTAL) { showFamFinal(); return; }
+  famLocked = false;
+  document.getElementById('famFb').textContent = '';
+  var r = family[Math.floor(Math.random() * family.length)];
+  curFam = r;
+  document.getElementById('famAv').textContent = r.av;
+  var opts = [
+    { t: "He's my " + r.role, v: 'He' },
+    { t: "She's my " + r.role, v: 'She' }
+  ].sort(function() { return Math.random() - 0.5; });
+  var box = document.getElementById('famOpts');
+  box.innerHTML = '';
+  opts.forEach(function(o) {
+    var b = document.createElement('button');
+    b.className = 'card btn-option';
+    b.textContent = o.t;
+    b.onclick = function() { checkFam(o.v); };
+    box.appendChild(b);
+  });
+}
+function checkFam(p) {
+  if (famLocked) return;
+  famLocked = true;
+  var fb = document.getElementById('famFb');
+  if (p === curFam.p) {
+    famScore++;
+    fb.textContent = "Yes! " + curFam.p + "'s my " + curFam.role + '.';
+    fb.className = 'feedback correct';
+    speak('Yes! ' + curFam.p + ' is my ' + curFam.role, function() {
+      famQ++; updFam(); setTimeout(nextFam, 500);
+    });
+  } else {
+    fb.textContent = 'Oops! Try again.';
+    fb.className = 'feedback incorrect';
+    speak('Try again', function() { famLocked = false; });
+  }
+}
+function showFamFinal() {
+  document.getElementById('fam-play').classList.add('hidden');
+  document.getElementById('fam-final').classList.remove('hidden');
+  document.getElementById('famFinalStars').textContent = stars(famScore);
+  document.getElementById('famFinalText').textContent = 'You got ' + famScore + ' out of ' + TOTAL;
+  speak(praise(famScore) + ' You got ' + famScore + ' out of ' + TOTAL);
+}
+
+var objects = [
+  { name: 'flower', av: '\uD83C\uDF38' },
+  { name: 'snake', av: '\uD83D\uDC0D' },
+  { name: 'apple', av: '\uD83C\uDF4E' },
+  { name: 'flower', av: '\uD83C\uDF3A' }
+];
+var curObj = null, objQ = 0, objScore = 0, objLocked = false;
+function startObj() {
+  document.getElementById('obj-final').classList.add('hidden');
+  document.getElementById('obj-play').classList.remove('hidden');
+  objQ = 0; objScore = 0; objLocked = false;
+  updObj(); nextObj();
+}
+function updObj() {
+  document.getElementById('objFill').style.width = (objQ/TOTAL*100) + '%';
+  document.getElementById('objProg').textContent = objQ + ' / ' + TOTAL;
+  document.getElementById('objStars').textContent = stars(objScore);
+}
+function nextObj() {
+  if (objQ >= TOTAL) { showObjFinal(); return; }
+  objLocked = false;
+  document.getElementById('objFb').textContent = '';
+  var r = objects[Math.floor(Math.random() * objects.length)];
+  curObj = r;
+  document.getElementById('objAv').textContent = r.av;
+  var qs = ['flower', 'snake', 'apple'];
+  var q = qs[Math.floor(Math.random() * qs.length)];
+  document.getElementById('objQ').textContent = 'Is it a ' + q + '?';
+  curObj.correct = (r.name === q);
+}
+function checkYN(ans) {
+  if (objLocked) return;
+  objLocked = true;
+  var fb = document.getElementById('objFb');
+  if (curObj.correct === ans) {
+    objScore++;
+    fb.textContent = 'Correct!';
+    fb.className = 'feedback correct';
+    speak('Yes! Correct!', function() {
+      objQ++; updObj(); setTimeout(nextObj, 500);
+    });
+  } else {
+    fb.textContent = 'Try again!';
+    fb.className = 'feedback incorrect';
+    speak('Try again', function() { objLocked = false; });
+  }
+}
+function showObjFinal() {
+  document.getElementById('obj-play').classList.add('hidden');
+  document.getElementById('obj-final').classList.remove('hidden');
+  document.getElementById('objFinalStars').textContent = stars(objScore);
+  document.getElementById('objFinalText').textContent = 'You got ' + objScore + ' out of ' + TOTAL;
+  speak(praise(objScore) + ' You got ' + objScore + ' out of ' + TOTAL);
+}
+
+var adjData = [
+  { e: '\uD83D\uDE0A', sent: 'She ___ happy.', ok: 'is happy', bad: 'is sad' },
+  { e: '\uD83D\uDE22', sent: 'He ___ sad.', ok: 'is sad', bad: 'is happy' },
+  { e: '\uD83D\uDE0A', sent: 'He ___ happy.', ok: 'is happy', bad: 'is sad' },
+  { e: '\uD83D\uDE22', sent: 'She ___ sad.', ok: 'is sad', bad: 'is happy' }
+];
+var curAdj = null, adjQ = 0, adjScore = 0, adjLocked = false;
+function startAdj() {
+  document.getElementById('adj-final').classList.add('hidden');
+  document.getElementById('adj-play').classList.remove('hidden');
+  adjQ = 0; adjScore = 0; adjLocked = false;
+  updAdj(); nextAdj();
+}
+function updAdj() {
+  document.getElementById('adjFill').style.width = (adjQ/TOTAL*100) + '%';
+  document.getElementById('adjProg').textContent = adjQ + ' / ' + TOTAL;
+  document.getElementById('adjStars').textContent = stars(adjScore);
+}
+function nextAdj() {
+  if (adjQ >= TOTAL) { showAdjFinal(); return; }
+  adjLocked = false;
+  document.getElementById('adjFb').textContent = '';
+  var r = adjData[Math.floor(Math.random() * adjData.length)];
+  curAdj = r;
+  document.getElementById('adjEmoji').textContent = r.e;
+  document.getElementById('adjSent').innerHTML = r.sent.replace('___', '<span class="blank">___</span>');
+  var opts = [r.ok, r.bad].sort(function() { return Math.random() - 0.5; });
+  var box = document.getElementById('adjOpts');
+  box.innerHTML = '';
+  opts.forEach(function(o) {
+    var b = document.createElement('button');
+    b.className = 'card btn-option';
+    b.textContent = o;
+    b.onclick = function() { checkAdj(o); };
+    box.appendChild(b);
+  });
+}
+function checkAdj(a) {
+  if (adjLocked) return;
+  adjLocked = true;
+  var fb = document.getElementById('adjFb');
+  if (a === curAdj.ok) {
+    adjScore++;
+    fb.textContent = 'Correct!';
+    fb.className = 'feedback correct';
+    speak('Yes! ' + curAdj.ok, function() {
+      adjQ++; updAdj(); setTimeout(nextAdj, 500);
+    });
+  } else {
+    fb.textContent = 'Try again!';
+    fb.className = 'feedback incorrect';
+    speak('Try again', function() { adjLocked = false; });
+  }
+}
+function showAdjFinal() {
+  document.getElementById('adj-play').classList.add('hidden');
+  document.getElementById('adj-final').classList.remove('hidden');
+  document.getElementById('adjFinalStars').textContent = stars(adjScore);
+  document.getElementById('adjFinalText').textContent = 'You got ' + adjScore + ' out of ' + TOTAL;
+  speak(praise(adjScore) + ' You got ' + adjScore + ' out of ' + TOTAL);
+}
+
+var tobeData = [
+  { subj: 'I', ok: 'am', sent: 'I ___ happy.' },
+  { subj: 'He', ok: 'is', sent: 'He ___ happy.' },
+  { subj: 'She', ok: 'is', sent: 'She ___ sad.' },
+  { subj: 'You', ok: 'are', sent: 'You ___ happy.' },
+  { subj: 'It', ok: 'is', sent: 'It ___ a flower.' },
+  { subj: 'I', ok: 'am', sent: 'I ___ sad.' },
+  { subj: 'He', ok: 'is', sent: 'He ___ my dad.' },
+  { subj: 'She', ok: 'is', sent: 'She ___ my mum.' },
+  { subj: 'We', ok: 'are', sent: 'We ___ happy.' },
+  { subj: 'They', ok: 'are', sent: 'They ___ sad.' }
+];
+var curTobe = null, tobeQ = 0, tobeScore = 0, tobeLocked = false;
+function startTobe() {
+  document.getElementById('tobe-final').classList.add('hidden');
+  document.getElementById('tobe-play').classList.remove('hidden');
+  tobeQ = 0; tobeScore = 0; tobeLocked = false;
+  updTobe(); nextTobe();
+}
+function updTobe() {
+  document.getElementById('tobeFill').style.width = (tobeQ/TOTAL*100) + '%';
+  document.getElementById('tobeProg').textContent = tobeQ + ' / ' + TOTAL;
+  document.getElementById('tobeStars').textContent = stars(tobeScore);
+}
+function nextTobe() {
+  if (tobeQ >= TOTAL) { showTobeFinal(); return; }
+  tobeLocked = false;
+  document.getElementById('tobeFb').textContent = '';
+  var r = tobeData[Math.floor(Math.random() * tobeData.length)];
+  curTobe = r;
+  document.getElementById('tobeSent').innerHTML = r.sent.replace('___', '<span class="blank">___</span>');
+  var opts = ['am', 'is', 'are'].sort(function() { return Math.random() - 0.5; });
+  var box = document.getElementById('tobeOpts');
+  box.innerHTML = '';
+  opts.forEach(function(o) {
+    var b = document.createElement('button');
+    b.className = 'card btn-option';
+    b.textContent = o;
+    b.onclick = function() { checkTobe(o); };
+    box.appendChild(b);
+  });
+}
+function checkTobe(a) {
+  if (tobeLocked) return;
+  tobeLocked = true;
+  var fb = document.getElementById('tobeFb');
+  if (a === curTobe.ok) {
+    tobeScore++;
+    fb.textContent = 'Correct!';
+    fb.className = 'feedback correct';
+    speak('Yes! ' + curTobe.subj + ' ' + curTobe.ok, function() {
+      tobeQ++; updTobe(); setTimeout(nextTobe, 500);
+    });
+  } else {
+    fb.textContent = 'Try again!';
+    fb.className = 'feedback incorrect';
+    speak('Try again', function() { tobeLocked = false; });
+  }
+}
+function showTobeFinal() {
+  document.getElementById('tobe-play').classList.add('hidden');
+  document.getElementById('tobe-final').classList.remove('hidden');
+  document.getElementById('tobeFinalStars').textContent = stars(tobeScore);
+  document.getElementById('tobeFinalText').textContent = 'You got ' + tobeScore + ' out of ' + TOTAL;
+  speak(praise(tobeScore) + ' You got ' + tobeScore + ' out of ' + TOTAL);
+}
+
+startFam();
+startObj();
+startAdj();
+startTobe();
+</script>
+</body>
+</html>
